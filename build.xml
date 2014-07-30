@@ -14,6 +14,16 @@
     <target name="migrate">
         <exec command="${php.runtime} ${script.path}/migrate.php" outputProperty="migration.status" />
         <echo msg="Migration status: ${migration.status}" />
+        <if>
+            <contains string="${migration.status}" substring="ok" />
+            <then>
+                <echo message="Migration succeeded" />
+            </then>
+            <else>
+                <echo message="Migration failed" />
+                <phingcall target="revert" />
+            </else>
+        </if>
     </target>
 
     <target name="revert">
@@ -33,16 +43,7 @@
         <exec command="git checkout origin master" />
         <exec command="git pull origin master" />
         <phingcall target="migrate" />
-        <if>
-            <contains string="${migration.status}" substring="ok" />
-            <then>
-                <echo message="Migration succeeded" />
-            </then>
-            <else>
-                <echo message="Migration failed" />
-                <phingcall target="revert" />
-            </else>
-        </if>
+
         <echo message="Cleaning up..." />
         <exec command="git tag --delete ${gittag.name}" />
     </target>
