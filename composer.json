@@ -1,0 +1,14 @@
+{
+    "name": "adamkopec/phing",
+    "description": "Phing config example",
+    "authors": [
+        {
+            "name": "Adam Kopeć",
+            "email": "adam.kopec@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "phing/phing": "2.5.*"
+    }
+}
