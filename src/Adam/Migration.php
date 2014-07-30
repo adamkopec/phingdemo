@@ -12,9 +12,9 @@ class Migration {
 
     public function execute() {
         if (rand(0,3) == 1) {
-            echo 'fail';
+            echo "fail\n";
         } else {
-            echo 'ok';
+            echo "ok\n";
         }
     }
 } 

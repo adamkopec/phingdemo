@@ -9,6 +9,12 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "phing/phing": "2.5.*"
+        "phing/phing": "2.5.*",
+        "pear/versioncontrol_git": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Adam\\": "src/Adam/"
+        }
     }
 }
