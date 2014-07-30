@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Phing test" default="build">
+<project name="Phing test" default="dist">
+    <property name="repo.dir" value="./" />
+    <resolvepath propertyName="repo.dir.resolved" file="${repo.dir}" />
+
+    <php expression="include('${project.basedir}/vendor/autoload.php');"/>
     <property name="script.path" value="./script" />
     <property name="php.runtime" value="php " />
     <tstamp />
     <property name="gittag.name" value="build/${DSTAMP}${TSTAMP}" />
+    <echo message="siema" />
 
-    <target name="migrate" depends="build">
+    <target name="migrate">
         <exec command="${php.runtime} ${script.path}/migrate.php" outputProperty="migration.status" />
         <echo msg="Migration status: ${migration.status}" />
     </target>
 
     <target name="revert">
         <echo message="Reverting..." />
-        <gitcheckout repository="." branchname="${gittag.name}" />
+        <exec command="git checkout -- ." />
     </target>
 
-    <target name="build">
+    <target name="dist">
         <echo message="Building necessary directories..." />
         <mkdir dir="cache/" />
         <mkdir dir="application/logs/" />
 
         <echo message="Git-jutsu..." />
+        <echo message="${gittag.name}" />
 
-        <gittag name="${gittag.name}" repository="." />
-        <gitcheckout repository="." branchname="master" />
-        <gitpull repository="." source="origin" refspec="master" />
+        <exec command="git tag -a ${gittag.name} -m deploy"/>
+        <exec command="git checkout origin master" />
+        <exec command="git pull origin master" />
         <phingcall target="migrate" />
         <if>
             <contains string="${migration.status}" substring="ok" />
@@ -37,6 +43,6 @@
             </else>
         </if>
         <echo message="Cleaning up..." />
-        <gittag name="${gittag.name}" repository="." delete="true" />
+        <exec command="git tag --delete ${gittag.name}" />
     </target>
 </project>
