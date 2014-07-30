@@ -29,6 +29,7 @@
     <target name="revert">
         <echo message="Reverting..." />
         <exec command="git checkout -- ." />
+        <fail message="Reverted" />
     </target>
 
     <target name="dist" depends="prepare">
